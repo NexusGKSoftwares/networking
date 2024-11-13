@@ -1,0 +1,84 @@
+
+# Define Router and Host Nodes
+node 0
+    type router
+    model Router
+    position 100,100
+
+node 1
+    type host
+    model PC
+    position 200,100
+
+node 2
+    type host
+    model PC
+    position 200,200
+
+node 3
+    type router
+    model Router
+    position 300,100
+
+# Define Links between Nodes
+link 0
+    nodes 0 1
+    bandwidth 1000000
+    delay 10
+    loss 0
+
+link 1
+    nodes 0 2
+    bandwidth 1000000
+    delay 10
+    loss 0
+
+link 2
+    nodes 0 3
+    bandwidth 1000000
+    delay 10
+    loss 0
+
+# IP Addresses for Interfaces on Each Node
+interface 0 0  # Interface on Router 0 for Delos network
+    ip4 192.168.1.1
+    ip4mask 255.255.255.0
+
+interface 1 0  # Interface on Host in Delos network
+    ip4 192.168.20.10
+    ip4mask 255.255.255.0
+
+interface 2 0  # Interface on Host in Talos network
+    ip4 192.168.30.10
+    ip4mask 255.255.255.0
+
+interface 3 0  # Interface on Router 3 for Talos network
+    ip4 192.168.1.2
+    ip4mask 255.255.255.0
+
+# Static Routes on Router 0
+# To connect Delos and Talos networks through Router 3
+
+route 0
+    destination 192.168.20.0
+    mask 255.255.255.0
+    gateway 192.168.1.1  # Router 0 gateway to Delos network
+
+route 0
+    destination 192.168.30.0
+    mask 255.255.255.0
+    gateway 192.168.1.2  # Router 3 gateway to Talos network
+
+# DHCP Configuration for Delos Network on Router 0
+dhcp
+    start 192.168.20.100
+    end 192.168.20.150
+    subnet 255.255.255.0
+    router 192.168.1.1
+
+# DHCP Configuration for Talos Network on Router 3
+dhcp
+    start 192.168.30.100
+    end 192.168.30.150
+    subnet 255.255.255.0
+    router 192.168.1.2
